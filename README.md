@@ -2,6 +2,10 @@
 
 ## Prerequisites
 
+- Как работает интернет\
+Например: <https://habr.com/ru/articles/709210/>, но я бы порекомендовал найти еще что-то самостоятельно.
+- Что такое DNS?\
+Например: <https://habr.com/ru/articles/303446/>
 - HTTP/HTTPS\
 Например: <https://habr.com/ru/companies/avito/articles/710660/>, <https://habr.com/ru/articles/813395/>, что-то про HTTPS...\
 Я очень рекомендую руками (через `curl`/`telnet`) руками потыкать какие-то запросы (в т.ч. в API, которое ты будешь использовать). Postman - удобный UI для них, но нужно уметь жить и без него.
@@ -51,7 +55,12 @@
 ## Дополнительная информация, которую я спрошу на защите
 - [Missing semester of cs](https://missing.csail.mit.edu). Изучай это в фоне в течение всех лаб.
 - Компиляция и интепретация, разница. Компилируемые и интепретируемые языки. Трансляция. \
-Например: <https://ru.hexlet.io/blog/posts/kompilyatsiya-i-interpretatsiya-koda-chto-eto-takoe-i-v-chem-raznitsa>, <https://blog.skillfactory.ru/glossary/interpretator/>. Найди что-то сама про трансляцию.
+Например: <https://ru.hexlet.io/blog/posts/kompilyatsiya-i-interpretatsiya-koda-chto-eto-takoe-i-v-chem-raznitsa>, <https://blog.skillfactory.ru/glossary/interpretator/>. Найди что-то самостоятельно про трансляцию.\
+Вопрос на засыпку - а что такое вообще браузер?
 - Какая бывает типизация.\
 Например: <https://habr.com/ru/articles/161205/>.
 - Что такое многопоточность? Что такое асинхронность? В чем разница? Что такое гонка? Асинхронность и многопотность в твоем ЯП.
+
+<br/><br/>
+
+Вообще, мы стараемся идти по <https://roadmap.sh/frontend>, рекомендую ознакомиться
