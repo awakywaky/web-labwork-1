@@ -28,6 +28,7 @@
 
 
 #### Нужно использовать
+- BEM
 - [Code style](https://github.com/yandex/mapsapi-codestyle/blob/master/javascript.md).
 - [Conventional commits](https://gist.github.com/qoomon/5dfcdf8eec66a051ecd85625518cfd13).
 
