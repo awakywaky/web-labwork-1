@@ -1,8 +1,27 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Прогноз погоды</title>
+    <link rel="stylesheet" href="../web-labwork-1/styles.css">
+</head>
 <body>
-
-<h1>my work is here</h1>
-
+<div class="weather-app">
+    <div class="weather-app__image"></div>
+    <h1 class="weather-app__title">Weather forecast</h1>
+    <div class="weather-app__city-selector">
+        <input
+                type="text"
+                id="city-input"
+                class="weather-app__city-input"
+                placeholder="Enter city name"
+        >
+        <button id="city-submit" class="weather-app__city-submit">Show weather</button>
+    </div>
+    <div id="weather-info" class="weather-app__info">
+    </div>
+</div>
+<script src="../web-labwork-1/script.js"></script>
 </body>
 </html>
