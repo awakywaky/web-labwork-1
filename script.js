@@ -23,7 +23,7 @@ citySubmit.addEventListener('click', () => {
         errorMessage.style.display = 'block';
         return;
     }
-    if (!/^[a-zA-Z\s-]+$/.test(city)) {
+    if (!/^[a-zA-Z-]+$/.test(city)) {
         alert('Enter a city name containing only letters');
         return;
     }
