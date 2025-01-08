@@ -1,47 +1,46 @@
-const cityInput = document.getElementById('city-input');
-const citySubmit = document.getElementById('city-submit');
-const weatherInfo = document.getElementById('weather-info');
-const errorMessage = document.createElement('p');
-errorMessage.style.color = 'red';
-errorMessage.style.marginTop = '10px';
-errorMessage.style.display = 'none';
-cityInput.parentElement.appendChild(errorMessage);
-
 window.onload = () => {
+    const cityInput = document.getElementById('city-input');
+    const citySubmit = document.getElementById('city-submit');
+    const weatherInfo = document.getElementById('weather-info');
+    const errorMessage = document.createElement('p');
+    errorMessage.style.color = 'red';
+    errorMessage.style.marginTop = '10px';
+    errorMessage.style.display = 'none';
+    cityInput.parentElement.appendChild(errorMessage);
+
     const savedCity = localStorage.getItem('city');
     if (typeof savedCity === 'string' && savedCity.trim() !== '') {
         fetchWeather(savedCity);
     }
+
+    citySubmit.addEventListener('click', () => {
+        const city = cityInput.value.trim();
+        errorMessage.style.display = 'none';
+
+        if (!city) {
+            errorMessage.textContent = 'Please enter a city name.';
+            errorMessage.style.display = 'block';
+            return;
+        }
+        if (!/^[a-zA-Z\s-]+$/.test(city)) {
+            alert('Enter a city name containing only letters');
+            return;
+        }
+        localStorage.setItem('city', city);
+        citySubmit.textContent = 'Loading...';
+
+        fetchWeather(city)
+            .then(() => {
+                citySubmit.textContent = 'Show weather';
+                citySubmit.disabled = false;
+            })
+            .catch(() => {
+                alert('Failed to get weather data :( Shall we try again?');
+                citySubmit.textContent = 'Show weather';
+                citySubmit.disabled = false;
+            });
+    });
 };
-
-
-citySubmit.addEventListener('click', () => {
-    const city = cityInput.value.trim();
-    errorMessage.style.display = 'none';
-
-    if (!city) {
-        errorMessage.textContent = 'Please enter a city name.';
-        errorMessage.style.display = 'block';
-        return;
-    }
-    if (!/^[a-zA-Z\s-]+$/.test(city)) {
-        alert('Enter a city name containing only letters');
-        return;
-    }
-    localStorage.setItem('city', city);
-    citySubmit.textContent = 'Loading...';
-
-    fetchWeather(city)
-        .then(() => {
-            citySubmit.textContent = 'Show weather';
-            citySubmit.disabled = false;
-        })
-        .catch(() => {
-            alert('Failed to get weather data :( Shall we try again?');
-            citySubmit.textContent = 'Show weather';
-            citySubmit.disabled = false;
-        });
-});
 
 async function fetchWeather(city) {
     try {
@@ -80,8 +79,8 @@ function updateWeatherStyle(code) {
     const body = document.body;
     const appContainer = document.querySelector('.weather-app');
     const appImage = document.querySelector('.weather-app__image');
-    const button = citySubmit;
-    const input = cityInput;
+    const button = document.getElementById('city-submit');
+    const input = document.getElementById('city-input');
 
     let backgroundImage, appBackground, appImageBackground, buttonColor, inputBackground, inputBorderColor, color;
 
@@ -150,10 +149,9 @@ function updateWeatherStyle(code) {
     input.style.color = color;
 }
 
-
-
 function displayWeather(data) {
     const { temperature, weathercode } = data.current_weather;
+    const weatherInfo = document.getElementById('weather-info');
     weatherInfo.innerHTML = `
         <h2>Weather according to your request:</h2>
         <p>Temperature: ${temperature}°C</p>
