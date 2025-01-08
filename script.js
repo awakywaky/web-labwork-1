@@ -8,6 +8,35 @@ window.onload = () => {
     errorMessage.style.display = 'none';
     cityInput.parentElement.appendChild(errorMessage);
 
+    const translations = {
+        en: {
+            enterCity: 'Please enter a city name.',
+            invalidCity: 'Enter a city name containing only letters',
+            loading: 'Loading...',
+            showWeather: 'Show weather',
+            weatherNotFound: 'Failed to get weather data :( Shall we try again?',
+            cityNotFound: 'Such a city has not yet been invented :(',
+        },
+        es: {
+            enterCity: 'Por favor, ingrese el nombre de una ciudad.',
+            invalidCity: 'Ingrese un nombre de ciudad que contenga solo letras',
+            loading: 'Cargando...',
+            showWeather: 'Mostrar el clima',
+            weatherNotFound: 'No se pudo obtener los datos meteorológicos :( ¿Intentamos nuevamente?',
+            cityNotFound: 'Todavía no se ha inventado tal ciudad :(',
+        },
+        ru: {
+            enterCity: 'Пожалуйста, введите название города.',
+            invalidCity: 'Введите название города, содержащее только буквы',
+            loading: 'Загрузка...',
+            showWeather: 'Показать погоду',
+            weatherNotFound: 'Не удалось получить данные о погоде :( Попробуем еще раз?',
+            cityNotFound: 'Такой город еще не изобрели :(',
+        },
+    };
+
+    const currentLang = 'en'; // Установите язык (en, es, ru)
+
     const savedCity = localStorage.getItem('city');
     if (typeof savedCity === 'string' && savedCity.trim() !== '') {
         fetchWeather(savedCity);
@@ -18,26 +47,26 @@ window.onload = () => {
         errorMessage.style.display = 'none';
 
         if (!city) {
-            errorMessage.textContent = 'Please enter a city name.';
+            errorMessage.textContent = translations[currentLang].enterCity;
             errorMessage.style.display = 'block';
             return;
         }
         if (!/^[a-zA-Z\s-]+$/.test(city)) {
-            const STORAGE_KEY = 'city';
-            alert('Enter a city name containing only letters');
+            alert(translations[currentLang].invalidCity);
             return;
         }
+
         localStorage.setItem('city', city);
-        citySubmit.textContent = 'Loading...';
+        citySubmit.textContent = translations[currentLang].loading;
 
         fetchWeather(city)
             .then(() => {
-                citySubmit.textContent = 'Show weather';
+                citySubmit.textContent = translations[currentLang].showWeather;
                 citySubmit.disabled = false;
             })
             .catch(() => {
-                alert('Failed to get weather data :( Shall we try again?');
-                citySubmit.textContent = 'Show weather';
+                alert(translations[currentLang].weatherNotFound);
+                citySubmit.textContent = translations[currentLang].showWeather;
                 citySubmit.disabled = false;
             });
     });
@@ -56,7 +85,7 @@ async function fetchWeather(city) {
 
         const cityData = await cityResponse.json();
         if (!cityData || cityData.length === 0) {
-            alert('Such a city has not yet been invented :(');
+            alert(translations[currentLang].cityNotFound);
             return;
         }
 
@@ -72,7 +101,7 @@ async function fetchWeather(city) {
         displayWeather(weatherData);
     } catch (error) {
         console.error('Error:', error.message);
-        alert('Weather not found :( Shall we try again?');
+        alert(translations[currentLang].weatherNotFound);
     }
 }
 
