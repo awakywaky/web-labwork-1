@@ -1,3 +1,5 @@
+const API_BASE_URL = 'https://api.api-ninjas.com/v1';
+
 class CityNotFoundError extends Error {
     constructor(message) {
         super(message);
@@ -49,7 +51,7 @@ window.onload = () => {
         },
     };
 
-    const currentLang = 'en'; // Установите язык (en, es, ru, вообще я могу прописать еще что-то если надо будет)
+    const currentLang = 'en'; // Установите язык (en, es, ru)
 
     const savedCity = localStorage.getItem('city');
     if (typeof savedCity === 'string' && savedCity.trim() !== '') {
@@ -109,7 +111,7 @@ async function fetchWeather(city) {
 }
 
 async function fetchCityData(city) {
-    const cityApiUrl = `https://api.api-ninjas.com/v1/city?name=${city}`;
+    const cityApiUrl = `${API_BASE_URL}/city?name=${city}`;
     const cityResponse = await fetch(cityApiUrl, {
         headers: { 'X-Api-Key': '9aIAxYHHQOQnmq4dOkuXOA==wfQa96nJcyX8b14o' }
     });
