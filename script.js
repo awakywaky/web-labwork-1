@@ -14,8 +14,24 @@ class WeatherDataError extends Error {
     }
 }
 
+const WEATHER_CODES = {
+    CLEAR: [0, 1],
+    CLOUDY: [2, 3],
+    RAINY: [51, 53, 55, 61, 63, 65, 81, 82, 85],
+    SNOWY: [71, 73, 75, 77, 85, 86],
+    STORMY: [95, 96, 99],
+};
+
+const WEATHER_DESCRIPTIONS = {
+    CLEAR: 'Clear skies',
+    CLOUDY: 'Cloudy',
+    RAINY: 'Rainy',
+    SNOWY: 'Snowy',
+    STORMY: 'Stormy',
+};
+
 const WEATHER_STYLES = {
-    CLEAR_SKIES: {
+    CLEAR: {
         backgroundImage: 'url("./image/jeito.jpg")',
         appBackground: 'linear-gradient(135deg, #FFFACD, #FFE4B5)',
         appImageBackground: 'url("./image/sun.png")',
@@ -62,19 +78,13 @@ const WEATHER_STYLES = {
     },
 };
 
-function getStyleByWeatherCode(code) {
-    if ([0, 1].includes(code)) {
-        return WEATHER_STYLES.CLEAR_SKIES;
-    } else if ([2, 3].includes(code)) {
-        return WEATHER_STYLES.CLOUDY;
-    } else if ([51, 53, 55, 61, 63, 65, 81, 82, 85].includes(code)) {
-        return WEATHER_STYLES.RAINY;
-    } else if ([71, 73, 75, 77, 85, 86].includes(code)) {
-        return WEATHER_STYLES.SNOWY;
-    } else if ([95, 96, 99].includes(code)) {
-        return WEATHER_STYLES.STORMY;
+function mapWeatherCodeToEnum(code) {
+    for (const [key, codes] of Object.entries(WEATHER_CODES)) {
+        if (codes.includes(code)) {
+            return key;
+        }
     }
-    return {};
+    return null;
 }
 
 window.onload = () => {
@@ -96,25 +106,9 @@ window.onload = () => {
             weatherNotFound: 'Failed to get weather data :( Shall we try again?',
             cityNotFound: 'Such a city has not yet been invented :(',
         },
-        es: {
-            enterCity: 'Por favor, ingrese el nombre de una ciudad.',
-            invalidCity: 'Ingrese un nombre de ciudad que contenga solo letras',
-            loading: 'Cargando...',
-            showWeather: 'Mostrar el clima',
-            weatherNotFound: 'No se pudo obtener los datos meteorológicos :( ¿Intentamos nuevamente?',
-            cityNotFound: 'Todavía no se ha inventado tal ciudad :(',
-        },
-        ru: {
-            enterCity: 'Пожалуйста, введите название города.',
-            invalidCity: 'Введите название города, содержащее только буквы',
-            loading: 'Загрузка...',
-            showWeather: 'Показать погоду',
-            weatherNotFound: 'Не удалось получить данные о погоде :( Попробуем еще раз?',
-            cityNotFound: 'Такой город еще не изобрели :(',
-        },
     };
 
-    const currentLang = 'en'; // Установите язык (en, es, ru)
+    const currentLang = 'en';
 
     const savedCity = localStorage.getItem('city');
     if (typeof savedCity === 'string' && savedCity.trim() !== '') {
@@ -157,7 +151,7 @@ async function fetchWeather(city) {
         cityData = await fetchCityData(city);
     } catch (error) {
         console.error('Error fetching city data:', error.message);
-        alert(translations[currentLang].cityNotFound);
+        alert('City not found');
         return;
     }
 
@@ -166,7 +160,7 @@ async function fetchWeather(city) {
         weatherData = await fetchWeatherData(cityData);
     } catch (error) {
         console.error('Error fetching weather data:', error.message);
-        alert(translations[currentLang].weatherNotFound);
+        alert('Weather data not found');
         return;
     }
 
@@ -176,11 +170,11 @@ async function fetchWeather(city) {
 async function fetchCityData(city) {
     const cityApiUrl = `${API_BASE_URL}/city?name=${city}`;
     const cityResponse = await fetch(cityApiUrl, {
-        headers: { 'X-Api-Key': '9aIAxYHHQOQnmq4dOkuXOA==wfQa96nJcyX8b14o' }
+        headers: { 'X-Api-Key': '9aIAxYHHQOQnmq4dOkuXOA==wfQa96nJcyX8b14o' },
     });
 
     if (!cityResponse.ok) {
-        throw new CityNotFoundError(`Error finding city: ${cityResponse.status} ${cityResponse.statusText}`);
+        throw new CityNotFoundError('City not found');
     }
 
     const cityData = await cityResponse.json();
@@ -197,7 +191,7 @@ async function fetchWeatherData(cityData) {
     const weatherResponse = await fetch(weatherApiUrl);
 
     if (!weatherResponse.ok) {
-        throw new WeatherDataError(`Error when searching for weather: ${weatherResponse.status} ${weatherResponse.statusText}`);
+        throw new WeatherDataError('Weather data not found');
     }
 
     const weatherData = await weatherResponse.json();
@@ -205,16 +199,13 @@ async function fetchWeatherData(cityData) {
 }
 
 function updateWeatherStyle(code) {
-    const styles = getStyleByWeatherCode(code);
+    const weatherType = mapWeatherCodeToEnum(code);
+    const styles = WEATHER_STYLES[weatherType] || {};
 
     const body = document.body;
     const appContainer = document.querySelector('.weather-app');
     const appImage = document.querySelector('.weather-app__image');
-
-    /** @type {HTMLButtonElement} */
     const button = document.getElementById('city-submit');
-
-    /** @type {HTMLInputElement} */
     const input = document.getElementById('city-input');
 
     body.style.transition = 'background 2s ease';
@@ -242,40 +233,15 @@ function updateWeatherStyle(code) {
 
 function displayWeather(data) {
     const { temperature, weathercode } = data.current_weather;
+    const weatherType = mapWeatherCodeToEnum(weathercode);
+    const description = WEATHER_DESCRIPTIONS[weatherType] || 'Unknown weather';
+
     const weatherInfo = document.getElementById('weather-info');
     weatherInfo.innerHTML = `
         <h2>Weather according to your request:</h2>
         <p>Temperature: ${temperature}°C</p>
-        <p>Precipitation: ${getWeatherDescription(weathercode)}</p>
+        <p>Precipitation: ${description}</p>
     `;
+
     updateWeatherStyle(weathercode);
-}
-
-function getWeatherDescription(code) {
-    const descriptions = {
-        0: 'Clear skies',
-        1: 'Mostly clear',
-        2: 'Partly cloudy',
-        3: 'Cloudy',
-        51: 'Drizzle (light)',
-        53: 'Drizzle (moderate)',
-        55: 'Drizzle (thick)',
-        61: 'Rain (light)',
-        63: 'Rain (moderate)',
-        65: 'Rain (heavy)',
-        71: 'Snowfall (light)',
-        73: 'Snowfall (moderate)',
-        75: 'Snowfall (heavy)',
-        77: 'Snow Grains',
-        80: 'Rain (light)',
-        81: 'Rainfall (moderate)',
-        82: 'Rain: heavy',
-        85: 'Intermittent snowfall (light)',
-        86: 'Intermittent snowfall (heavy)',
-        95: 'Thunderstorm',
-        96: 'Thunderstorm with hail (weak)',
-        99: 'Hail Thunderstorm (Severe)'
-    };
-
-    return descriptions[code] || 'Unknown weather';
 }
