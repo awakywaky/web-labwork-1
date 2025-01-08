@@ -2,7 +2,7 @@ body {
     font-family: 'Arial', sans-serif;
     margin: 0;
     padding: 0;
-    background: url('../web-labwork-1/image/oboi.jpg') no-repeat center center;
+    background: url('./image/oboi.jpg') no-repeat center center;
     background-size: cover;
     display: flex;
     justify-content: center;
