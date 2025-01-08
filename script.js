@@ -9,10 +9,11 @@ cityInput.parentElement.appendChild(errorMessage);
 
 window.onload = () => {
     const savedCity = localStorage.getItem('city');
-    if (savedCity) {
+    if (typeof savedCity === 'string' && savedCity.trim() !== '') {
         fetchWeather(savedCity);
     }
 };
+
 
 citySubmit.addEventListener('click', () => {
     const city = cityInput.value.trim();
@@ -23,7 +24,7 @@ citySubmit.addEventListener('click', () => {
         errorMessage.style.display = 'block';
         return;
     }
-    if (!/^[a-zA-Z-]+$/.test(city)) {
+    if (!/^[a-zA-Z\s-]+$/.test(city)) {
         alert('Enter a city name containing only letters');
         return;
     }
