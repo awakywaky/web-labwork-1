@@ -3,14 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Прогноз погоды</title>
-    <link rel="stylesheet" href="../web-labwork-1/styles.css">
+    <title>Weather Forecast</title>
+    <link rel="stylesheet" href="./styles.css">
 </head>
 <body>
-<div class="weather-app">
-    <div class="weather-app__image"></div>
-    <h1 class="weather-app__title">Weather forecast</h1>
-    <div class="weather-app__city-selector">
+<main class="weather-app">
+    <figure class="weather-app__image"></figure>
+    <header>
+        <h1 class="weather-app__title">Weather forecast</h1>
+    </header>
+    <section class="weather-app__city-selector">
         <input
                 type="text"
                 id="city-input"
@@ -18,10 +20,10 @@
                 placeholder="Enter city name"
         >
         <button id="city-submit" class="weather-app__city-submit">Show weather</button>
-    </div>
-    <div id="weather-info" class="weather-app__info">
-    </div>
-</div>
-<script src="../web-labwork-1/script.js"></script>
+    </section>
+    <section id="weather-info" class="weather-app__info">
+    </section>
+</main>
+<script src="./script.js"></script>
 </body>
 </html>
