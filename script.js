@@ -23,6 +23,7 @@ window.onload = () => {
             return;
         }
         if (!/^[a-zA-Z\s-]+$/.test(city)) {
+            const STORAGE_KEY = 'city';
             alert('Enter a city name containing only letters');
             return;
         }
