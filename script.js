@@ -73,36 +73,56 @@ window.onload = () => {
 };
 
 async function fetchWeather(city) {
+    let cityData;
     try {
-        const cityApiUrl = `https://api.api-ninjas.com/v1/city?name=${city}`;
-        const cityResponse = await fetch(cityApiUrl, {
-            headers: { 'X-Api-Key': '9aIAxYHHQOQnmq4dOkuXOA==wfQa96nJcyX8b14o' }
-        });
-
-        if (!cityResponse.ok) {
-            throw new Error(`Error finding city: ${cityResponse.status} ${cityResponse.statusText}`);
-        }
-
-        const cityData = await cityResponse.json();
-        if (!cityData || cityData.length === 0) {
-            alert(translations[currentLang].cityNotFound);
-            return;
-        }
-
-        const { latitude, longitude } = cityData[0];
-        const weatherApiUrl = `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current_weather=true`;
-        const weatherResponse = await fetch(weatherApiUrl);
-
-        if (!weatherResponse.ok) {
-            throw new Error(`Error when searching for weather: ${weatherResponse.status} ${weatherResponse.statusText}`);
-        }
-
-        const weatherData = await weatherResponse.json();
-        displayWeather(weatherData);
+        cityData = await fetchCityData(city);
     } catch (error) {
-        console.error('Error:', error.message);
-        alert(translations[currentLang].weatherNotFound);
+        console.error('Error fetching city data:', error.message);
+        alert(translations[currentLang].cityNotFound);
+        return;
     }
+
+    let weatherData;
+    try {
+        weatherData = await fetchWeatherData(cityData);
+    } catch (error) {
+        console.error('Error fetching weather data:', error.message);
+        alert(translations[currentLang].weatherNotFound);
+        return;
+    }
+
+    displayWeather(weatherData);
+}
+
+async function fetchCityData(city) {
+    const cityApiUrl = `https://api.api-ninjas.com/v1/city?name=${city}`;
+    const cityResponse = await fetch(cityApiUrl, {
+        headers: { 'X-Api-Key': '9aIAxYHHQOQnmq4dOkuXOA==wfQa96nJcyX8b14o' }
+    });
+
+    if (!cityResponse.ok) {
+        throw new Error(`Error finding city: ${cityResponse.status} ${cityResponse.statusText}`);
+    }
+
+    const cityData = await cityResponse.json();
+    if (!cityData || cityData.length === 0) {
+        throw new Error('City not found');
+    }
+
+    return cityData;
+}
+
+async function fetchWeatherData(cityData) {
+    const { latitude, longitude } = cityData[0];
+    const weatherApiUrl = `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current_weather=true`;
+    const weatherResponse = await fetch(weatherApiUrl);
+
+    if (!weatherResponse.ok) {
+        throw new Error(`Error when searching for weather: ${weatherResponse.status} ${weatherResponse.statusText}`);
+    }
+
+    const weatherData = await weatherResponse.json();
+    return weatherData;
 }
 
 function updateWeatherStyle(code) {
