@@ -1,4 +1,5 @@
 const API_BASE_URL = 'https://api.api-ninjas.com/v1';
+const API_TOKEN = '9aIAxYHHQOQnmq4dOkuXOA==wfQa96nJcyX8b14o';
 
 class CityNotFoundError extends Error {
     constructor(message) {
@@ -113,7 +114,7 @@ async function fetchWeather(city) {
 async function fetchCityData(city) {
     const cityApiUrl = `${API_BASE_URL}/city?name=${city}`;
     const cityResponse = await fetch(cityApiUrl, {
-        headers: { 'X-Api-Key': '9aIAxYHHQOQnmq4dOkuXOA==wfQa96nJcyX8b14o' }
+        headers: { 'X-Api-Key': API_TOKEN }
     });
 
     if (!cityResponse.ok) {
