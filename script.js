@@ -1,5 +1,4 @@
 const API_BASE_URL = 'https://api.api-ninjas.com/v1';
-const API_TOKEN = '9aIAxYHHQOQnmq4dOkuXOA==wfQa96nJcyX8b14o';
 
 class CityNotFoundError extends Error {
     constructor(message) {
@@ -114,7 +113,7 @@ async function fetchWeather(city) {
 async function fetchCityData(city) {
     const cityApiUrl = `${API_BASE_URL}/city?name=${city}`;
     const cityResponse = await fetch(cityApiUrl, {
-        headers: { 'X-Api-Key': API_TOKEN }
+        headers: { 'X-Api-Key': '9aIAxYHHQOQnmq4dOkuXOA==wfQa96nJcyX8b14o' }
     });
 
     if (!cityResponse.ok) {
@@ -142,54 +141,27 @@ async function fetchWeatherData(cityData) {
     return weatherData;
 }
 
-function updateWeatherStyle(code) {
-    const body = document.body;
-    const appContainer = document.querySelector('.weather-app');
-    const appImage = document.querySelector('.weather-app__image');
-
-    /** @type {HTMLButtonElement} */
-    const button = citySubmit;
-
-    /** @type {HTMLInputElement} */
-    const input = cityInput;
-
-    /** @type {string | undefined} */
-    let backgroundImage;
-
-    /** @type {string | undefined} */
-    let appBackground;
-
-    /** @type {string | undefined} */
-    let appImageBackground;
-
-    /** @type {string | undefined} */
-    let buttonColor;
-
-    /** @type {string | undefined} */
-    let inputBackground;
-
-    /** @type {string | undefined} */
-    let inputBorderColor;
-
-    /** @type {string | undefined} */
-    let color;
-
-    if ([0, 1].includes(code)){
-        backgroundImage = 'url("./image/jeito.jpg")';
-        appBackground = 'linear-gradient(135deg, #FFFACD, #FFE4B5)';
-        appImage.style.cssText = `background-image: url("./image/sun.png"); width: 100px; height: 100px;`;
-        buttonColor = '#fffacd';
-        inputBackground = '#ffffff';
-        inputBorderColor = '#5c582b';
-        color = '#BDB76B';
+function getStyleByWeatherCode(code) {
+    if ([0, 1].includes(code)) {
+        return {
+            backgroundImage: 'url("./image/jeito.jpg")',
+            appBackground: 'linear-gradient(135deg, #FFFACD, #FFE4B5)',
+            appImageBackground: 'url("./image/sun.png")',
+            buttonColor: '#fffacd',
+            inputBackground: '#ffffff',
+            inputBorderColor: '#5c582b',
+            color: '#BDB76B',
+        };
     } else if ([2, 3].includes(code)) {
-        backgroundImage = 'url("./image/sinii.jpg")';
-        appBackground = 'linear-gradient(135deg, #778899, #F0F8FF)';
-        appImage.style.cssText = `background-image: url("./image/cloudy.png"); width: 100px; height: 80px;`
-        buttonColor = '#7297af';
-        inputBackground = '#ffffff';
-        inputBorderColor = '#04273e';
-        color = '#04273e';
+        return {
+            backgroundImage: 'url("./image/sinii.jpg")',
+            appBackground: 'linear-gradient(135deg, #778899, #F0F8FF)',
+            appImageBackground: 'url("./image/cloudy.png")',
+            buttonColor: '#7297af',
+            inputBackground: '#ffffff',
+            inputBorderColor: '#04273e',
+            color: '#04273e',
+        };
     } else if ([51, 53, 55, 61, 63, 65, 81, 82, 85].includes(code)) {
         backgroundImage = 'url("./image/rainfon.jpg")';
         appBackground = 'linear-gradient(135deg, #808080, #ADD8E6)';
@@ -215,28 +187,43 @@ function updateWeatherStyle(code) {
         inputBorderColor = '#292928';
         color = '#292928';
     }
+    return {};
+}
+
+function updateWeatherStyle(code) {
+    const styles = getStyleByWeatherCode(code);
+
+    const body = document.body;
+    const appContainer = document.querySelector('.weather-app');
+    const appImage = document.querySelector('.weather-app__image');
+
+    /** @type {HTMLButtonElement} */
+    const button = document.getElementById('city-submit');
+
+    /** @type {HTMLInputElement} */
+    const input = document.getElementById('city-input');
 
     body.style.transition = 'background 2s ease';
-    body.style.backgroundImage = backgroundImage;
+    body.style.backgroundImage = styles.backgroundImage || '';
     body.style.backgroundSize = 'cover';
     body.style.backgroundRepeat = 'no-repeat';
     body.style.backgroundPosition = 'center';
 
     appContainer.style.transition = 'background 1.5s ease, color 1.5s ease';
-    appContainer.style.background = appBackground;
-    appContainer.style.color = color;
+    appContainer.style.background = styles.appBackground || '';
+    appContainer.style.color = styles.color || '';
 
     appImage.style.transition = 'background 1.5s ease';
-    appImage.style.backgroundImage = appImageBackground;
+    appImage.style.backgroundImage = styles.appImageBackground || '';
 
     button.style.transition = 'background 1.5s ease, color 1.5s ease';
-    button.style.background = buttonColor;
-    button.style.color = color;
+    button.style.background = styles.buttonColor || '';
+    button.style.color = styles.color || '';
 
     input.style.transition = 'background 1.5s ease, border-color 1.5s ease, color 1.5s ease';
-    input.style.background = inputBackground;
-    input.style.borderColor = inputBorderColor;
-    input.style.color = color;
+    input.style.background = styles.inputBackground || '';
+    input.style.borderColor = styles.inputBorderColor || '';
+    input.style.color = styles.color || '';
 }
 
 function displayWeather(data) {
