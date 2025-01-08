@@ -1,3 +1,17 @@
+class CityNotFoundError extends Error {
+    constructor(message) {
+        super(message);
+        this.name = "CityNotFoundError";
+    }
+}
+
+class WeatherDataError extends Error {
+    constructor(message) {
+        super(message);
+        this.name = "WeatherDataError";
+    }
+}
+
 window.onload = () => {
     const cityInput = document.getElementById('city-input');
     const citySubmit = document.getElementById('city-submit');
@@ -35,7 +49,7 @@ window.onload = () => {
         },
     };
 
-    const currentLang = 'en'; // Установите язык (en, es, ru)
+    const currentLang = 'en'; // Установите язык (en, es, ru, вообще я могу прописать еще что-то если надо будет)
 
     const savedCity = localStorage.getItem('city');
     if (typeof savedCity === 'string' && savedCity.trim() !== '') {
@@ -101,12 +115,12 @@ async function fetchCityData(city) {
     });
 
     if (!cityResponse.ok) {
-        throw new Error(`Error finding city: ${cityResponse.status} ${cityResponse.statusText}`);
+        throw new CityNotFoundError(`Error finding city: ${cityResponse.status} ${cityResponse.statusText}`);
     }
 
     const cityData = await cityResponse.json();
     if (!cityData || cityData.length === 0) {
-        throw new Error('City not found');
+        throw new CityNotFoundError('City not found');
     }
 
     return cityData;
@@ -118,7 +132,7 @@ async function fetchWeatherData(cityData) {
     const weatherResponse = await fetch(weatherApiUrl);
 
     if (!weatherResponse.ok) {
-        throw new Error(`Error when searching for weather: ${weatherResponse.status} ${weatherResponse.statusText}`);
+        throw new WeatherDataError(`Error when searching for weather: ${weatherResponse.status} ${weatherResponse.statusText}`);
     }
 
     const weatherData = await weatherResponse.json();
