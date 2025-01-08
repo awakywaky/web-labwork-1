@@ -14,6 +14,69 @@ class WeatherDataError extends Error {
     }
 }
 
+const WEATHER_STYLES = {
+    CLEAR_SKIES: {
+        backgroundImage: 'url("./image/jeito.jpg")',
+        appBackground: 'linear-gradient(135deg, #FFFACD, #FFE4B5)',
+        appImageBackground: 'url("./image/sun.png")',
+        buttonColor: '#fffacd',
+        inputBackground: '#ffffff',
+        inputBorderColor: '#5c582b',
+        color: '#BDB76B',
+    },
+    CLOUDY: {
+        backgroundImage: 'url("./image/sinii.jpg")',
+        appBackground: 'linear-gradient(135deg, #778899, #F0F8FF)',
+        appImageBackground: 'url("./image/cloudy.png")',
+        buttonColor: '#7297af',
+        inputBackground: '#ffffff',
+        inputBorderColor: '#04273e',
+        color: '#04273e',
+    },
+    RAINY: {
+        backgroundImage: 'url("./image/rainfon.jpg")',
+        appBackground: 'linear-gradient(135deg, #808080, #ADD8E6)',
+        appImageBackground: 'url("./image/rain.png")',
+        buttonColor: '#9cbbd6',
+        inputBackground: '#ffffff',
+        inputBorderColor: '#b5ccdf',
+        color: '#04273e',
+    },
+    SNOWY: {
+        backgroundImage: 'url("./image/snowfon.jpg")',
+        appBackground: 'linear-gradient(135deg, #778899, #F5F5F5)',
+        appImageBackground: 'url("./image/snow.png")',
+        buttonColor: 'rgba(191,191,191,0.88)',
+        inputBackground: '#ffffff',
+        inputBorderColor: '#b5ccdf',
+        color: '#ffffff',
+    },
+    STORMY: {
+        backgroundImage: 'url("./image/stormfon.jpg")',
+        appBackground: 'linear-gradient(135deg, #C0C0C0, #FFE4C4)',
+        appImageBackground: 'url("./image/storm.png")',
+        buttonColor: 'rgba(191,191,191,0.88)',
+        inputBackground: '#ffffff',
+        inputBorderColor: '#292928',
+        color: '#292928',
+    },
+};
+
+function getStyleByWeatherCode(code) {
+    if ([0, 1].includes(code)) {
+        return WEATHER_STYLES.CLEAR_SKIES;
+    } else if ([2, 3].includes(code)) {
+        return WEATHER_STYLES.CLOUDY;
+    } else if ([51, 53, 55, 61, 63, 65, 81, 82, 85].includes(code)) {
+        return WEATHER_STYLES.RAINY;
+    } else if ([71, 73, 75, 77, 85, 86].includes(code)) {
+        return WEATHER_STYLES.SNOWY;
+    } else if ([95, 96, 99].includes(code)) {
+        return WEATHER_STYLES.STORMY;
+    }
+    return {};
+}
+
 window.onload = () => {
     const cityInput = document.getElementById('city-input');
     const citySubmit = document.getElementById('city-submit');
@@ -139,55 +202,6 @@ async function fetchWeatherData(cityData) {
 
     const weatherData = await weatherResponse.json();
     return weatherData;
-}
-
-function getStyleByWeatherCode(code) {
-    if ([0, 1].includes(code)) {
-        return {
-            backgroundImage: 'url("./image/jeito.jpg")',
-            appBackground: 'linear-gradient(135deg, #FFFACD, #FFE4B5)',
-            appImageBackground: 'url("./image/sun.png")',
-            buttonColor: '#fffacd',
-            inputBackground: '#ffffff',
-            inputBorderColor: '#5c582b',
-            color: '#BDB76B',
-        };
-    } else if ([2, 3].includes(code)) {
-        return {
-            backgroundImage: 'url("./image/sinii.jpg")',
-            appBackground: 'linear-gradient(135deg, #778899, #F0F8FF)',
-            appImageBackground: 'url("./image/cloudy.png")',
-            buttonColor: '#7297af',
-            inputBackground: '#ffffff',
-            inputBorderColor: '#04273e',
-            color: '#04273e',
-        };
-    } else if ([51, 53, 55, 61, 63, 65, 81, 82, 85].includes(code)) {
-        backgroundImage = 'url("./image/rainfon.jpg")';
-        appBackground = 'linear-gradient(135deg, #808080, #ADD8E6)';
-        appImage.style.cssText = `background-image: url("./image/rain.png"); width: 100px; height: 100px;`
-        buttonColor = '#9cbbd6';
-        inputBackground = '#ffffff';
-        inputBorderColor = '#b5ccdf';
-        color = '#04273e';
-    } else if ([71, 73, 75, 77, 85, 86].includes(code)) {
-        backgroundImage = 'url("./image/snowfon.jpg")';
-        appBackground = 'linear-gradient(135deg, #778899, #F5F5F5)';
-        appImage.style.cssText = `background-image: url("./image/snow.png"); width: 100px; height: 100px;`
-        buttonColor = 'rgba(191,191,191,0.88)';
-        inputBackground = '#ffffff';
-        inputBorderColor = '#b5ccdf';
-        color = '#ffffff';
-    } else if ([95, 96, 99].includes(code)) {
-        backgroundImage = 'url("./image/stormfon.jpg")';
-        appBackground = 'linear-gradient(135deg, #C0C0C0, #FFE4C4)';
-        appImage.style.cssText = `background-image: url("./image/storm.png"); width: 100px; height: 100px;`
-        buttonColor = 'rgba(191,191,191,0.88)';
-        inputBackground = '#ffffff';
-        inputBorderColor = '#292928';
-        color = '#292928';
-    }
-    return {};
 }
 
 function updateWeatherStyle(code) {
