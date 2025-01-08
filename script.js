@@ -1,6 +1,11 @@
 const cityInput = document.getElementById('city-input');
 const citySubmit = document.getElementById('city-submit');
 const weatherInfo = document.getElementById('weather-info');
+const errorMessage = document.createElement('p');
+errorMessage.style.color = 'red';
+errorMessage.style.marginTop = '10px';
+errorMessage.style.display = 'none';
+cityInput.parentElement.appendChild(errorMessage);
 
 window.onload = () => {
     const savedCity = localStorage.getItem('city');
@@ -11,8 +16,11 @@ window.onload = () => {
 
 citySubmit.addEventListener('click', () => {
     const city = cityInput.value.trim();
+    errorMessage.style.display = 'none';
+
     if (!city) {
-        alert('Enter city name');
+        errorMessage.textContent = 'Please enter a city name.';
+        errorMessage.style.display = 'block';
         return;
     }
     if (!/^[a-zA-Z\s-]+$/.test(city)) {
