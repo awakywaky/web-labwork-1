@@ -146,10 +146,33 @@ function updateWeatherStyle(code) {
     const body = document.body;
     const appContainer = document.querySelector('.weather-app');
     const appImage = document.querySelector('.weather-app__image');
-    const button = document.getElementById('city-submit');
-    const input = document.getElementById('city-input');
 
-    let backgroundImage, appBackground, appImageBackground, buttonColor, inputBackground, inputBorderColor, color;
+    /** @type {HTMLButtonElement} */
+    const button = citySubmit;
+
+    /** @type {HTMLInputElement} */
+    const input = cityInput;
+
+    /** @type {string | undefined} */
+    let backgroundImage;
+
+    /** @type {string | undefined} */
+    let appBackground;
+
+    /** @type {string | undefined} */
+    let appImageBackground;
+
+    /** @type {string | undefined} */
+    let buttonColor;
+
+    /** @type {string | undefined} */
+    let inputBackground;
+
+    /** @type {string | undefined} */
+    let inputBorderColor;
+
+    /** @type {string | undefined} */
+    let color;
 
     if ([0, 1].includes(code)){
         backgroundImage = 'url("./image/jeito.jpg")';
