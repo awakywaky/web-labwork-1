@@ -42,8 +42,8 @@ body {
     position: absolute;
     top: 10px;
     left: 10px;
-    width: 110px;
-    height: 90px;
+    width: 120px;
+    height: 95px;
     background: url('./image/ranbow.png') no-repeat center center;
     background-size: cover;
     z-index: 1;
@@ -110,4 +110,30 @@ body {
     font-size: 1.2rem;
     line-height: 1.6;
     text-align: left;
+}
+
+.weather-app__error-message {
+    margin-top: 15px;
+    font-size: 1rem;
+    font-weight: bold;
+    display: none;
+    text-align: center;
+    color: #93002f;
+    background: linear-gradient(135deg, #f13c76, #f16c97);
+    border: 2px solid #93002f;
+    border-radius: 10px;
+    padding: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    animation: fadeInOut 3s ease-in-out;
+}
+
+@keyframes fadeInOut {
+    0%, 100% {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    10%, 90% {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
