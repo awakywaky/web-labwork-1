@@ -65,7 +65,7 @@ const WEATHER_STYLES = {
         buttonColor: 'rgba(191,191,191,0.88)',
         inputBackground: '#ffffff',
         inputBorderColor: '#b5ccdf',
-        color: '#ffffff',
+        color: '#3e515e',
     },
     STORMY: {
         backgroundImage: 'url("./image/stormfon.jpg")',
@@ -87,15 +87,22 @@ function mapWeatherCodeToEnum(code) {
     return null;
 }
 
+function displayError(message) {
+    const errorContainer = document.getElementById('error-message');
+    errorContainer.textContent = message;
+    errorContainer.style.display = 'block';
+}
+
+function clearError() {
+    const errorContainer = document.getElementById('error-message');
+    errorContainer.textContent = '';
+    errorContainer.style.display = 'none';
+}
+
 window.onload = () => {
     const cityInput = document.getElementById('city-input');
     const citySubmit = document.getElementById('city-submit');
     const weatherInfo = document.getElementById('weather-info');
-    const errorMessage = document.createElement('p');
-    errorMessage.style.color = 'red';
-    errorMessage.style.marginTop = '10px';
-    errorMessage.style.display = 'none';
-    cityInput.parentElement.appendChild(errorMessage);
 
     const translations = {
         en: {
@@ -117,15 +124,14 @@ window.onload = () => {
 
     citySubmit.addEventListener('click', () => {
         const city = cityInput.value.trim();
-        errorMessage.style.display = 'none';
+        clearError();
 
         if (!city) {
-            errorMessage.textContent = translations[currentLang].enterCity;
-            errorMessage.style.display = 'block';
+            displayError(translations[currentLang].enterCity);
             return;
         }
         if (!/^[a-zA-Z\s-]+$/.test(city)) {
-            alert(translations[currentLang].invalidCity);
+            displayError(translations[currentLang].invalidCity);
             return;
         }
 
@@ -137,8 +143,8 @@ window.onload = () => {
                 citySubmit.textContent = translations[currentLang].showWeather;
                 citySubmit.disabled = false;
             })
-            .catch(() => {
-                alert(translations[currentLang].weatherNotFound);
+            .catch((error) => {
+                displayError(error.message);
                 citySubmit.textContent = translations[currentLang].showWeather;
                 citySubmit.disabled = false;
             });
@@ -150,18 +156,14 @@ async function fetchWeather(city) {
     try {
         cityData = await fetchCityData(city);
     } catch (error) {
-        console.error('Error fetching city data:', error.message);
-        alert('City not found');
-        return;
+        throw new CityNotFoundError('City not found.');
     }
 
     let weatherData;
     try {
         weatherData = await fetchWeatherData(cityData);
     } catch (error) {
-        console.error('Error fetching weather data:', error.message);
-        alert('Weather data not found');
-        return;
+        throw new WeatherDataError('Weather data not found.');
     }
 
     displayWeather(weatherData);
